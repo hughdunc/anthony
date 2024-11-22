@@ -187,7 +187,7 @@
             document.getElementById("shop-cost").textContent = u[i].cost
             document.getElementById("ac").textContent = localStorage.getItem("Autoclicks")
           } else {
-            alert("You don't have enough strikers to claim this!")
+            alert("You don't have enough anthonies to claim this!")
           }
           localStorage.setItem("upgrades", JSONfn.stringify(u))
         }
@@ -214,7 +214,7 @@
             document.getElementById("shop-sold").textContent = u[i].claimed
             document.getElementById("shop-cost").textContent = u[i].cost
           } else {
-            alert("You don't have enough strikers to claim this!")
+            alert("You don't have enough anthonies to claim this!")
           }
           localStorage.setItem("upgrades", JSONfn.stringify(u))
           document.getElementById("ac").textContent = localStorage.getItem("Autoclicks")
@@ -233,8 +233,8 @@
         claim: function () {
           u = JSONfn.parse(localStorage.getItem("upgrades"))
           i = 3
-          if (localStorage.getItem("Strikers") >= u[i].cost) {
-            localStorage.setItem("Strikers", localStorage.getItem("Strikers") - u[i].cost)
+          if (localStorage.getItem("Strikers") >= 5000) {
+            localStorage.setItem("Strikers", localStorage.getItem("Strikers") - 5000)
             document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
             u[i].claimed++
             u[i + 1].unlocked = true
@@ -245,7 +245,7 @@
             document.getElementById("shop-cost").textContent = u[i].cost
             document.getElementById("shop-ac").textContent = u[i].ac
           } else {
-            alert("You don't have enough strikers to claim this!")
+            alert("You don't have enough anthonies to claim this!")
           }
           localStorage.setItem("upgrades", JSONfn.stringify(u))
         }
@@ -272,7 +272,7 @@
             document.getElementById("shop-cost").textContent = u[i].cost
             document.getElementById("shop-ac").textContent = u[i].ac
           } else {
-            alert("You don't have enough strikers to claim this!")
+            alert("You don't have enough anthonies to claim this!")
           }
           localStorage.setItem("upgrades", JSONfn.stringify(u))
         }
