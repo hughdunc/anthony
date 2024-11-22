@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Anthony Clicker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/860088e41f.js" crossorigin="anonymous"></script>
+  <link rel="icon" type="image/webp" href="striker.webp">
+</head>
+
+<body class="bg-zinc-900 flex flex-col items-center text-white overflow-hidden">
+  <main class="flex flex-col items-center justify-between p-3 gap-2 z-30 h-screen">
+    <div id="info" class="flex flex-col items-center">
+      <h1 class="text-3xl font-semibold mb-5">Anthony Clicker</h1>
+      <h2 class="text-2xl font-medium"><span id="strikers">0</span> Anthonies</h2>
+      <h2 class="text-xl font-medium">Autoclicks: <span id="ac"></span> per second</h2>
+      <h2 class="text-xl font-medium"><span id="spc">1</span> Anthony<span id="spc-s" class="hidden">s</span> per click
+      </h2>
+    </div>
+    <button
+      class="bg-sky-500 rounded-full w-48 h-48 relative hover:w-56 hover:h-50 transition-all duration-50 active:w-48 active:h-48 overflow-hidden"
+      id="clicker">
+      <img draggable="false" src="striker.webp" alt="Anthony"
+        class="absolute left-1/2 -translate-x-1/2 bottom-0 w-50 w-50 select-none">
+    </button>
+    <menu class="flex flex-col gap-3">
+      <button
+        class="w-64 py-2 bg-indigo-500 font-medium rounded-full text-2xl mt-5 flex gap-3 items-center justify-center"
+        onclick="menuOpen('shop')"><i class="fa-solid fa-bag-shopping"></i> Upgrades</button>
+      <button class="w-64 py-2 bg-indigo-500 font-medium rounded-full text-2xl flex gap-3 items-center justify-center"
+        onclick="menuOpen('medals')"><i class="fa-solid fa-medal"></i> Achievements</button>
+    </menu>
+
+  </main>
+  <div class="absolute w-full h-screen" id="rain"></div>
+
+  <section id="shop" class="absolute w-full h-[0px] z-50 bottom-0 bg-zinc-900">
+    <main class="h-screen w-full relative p-5">
+      <div class="absolute top-6 right-6 flex flex-col items-center gap-0 group" onclick="menuClose('shop')">
+        <i class="fa fa-xmark text-[48px] text-neutral-500 group-hover:text-white transition-all"></i>
+        <p
+          class="text-lg leading-none font-medium text-transparent group-hover:text-white transition-all cursor-pointer">
+          Close</p>
+      </div>
+
+      <h1 class="text-3xl font-semibold">Shop</h1>
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+        <div class="flex mb-2 items-center gap-5">
+          <i class="fa fa-angle-left text-[72px] text-neutral-500 hover:text-white transition-all"
+            onclick="shopPrev()"></i>
+          <img src="strikers/0.webp" class="w-64 h-64 rounded-full select-none" draggable="false" id="shop-img">
+          <i class="fa fa-angle-right text-[72px] text-neutral-500 hover:text-white transition-all"
+            onclick="shopNext()"></i>
+        </div>
+
+        <h2 class="text-3xl font-semibold" id="shop-name">Music Maker</h2>
+        <h2 class="text-2xl font-semibold mb-3"><span id="shop-cost">100</span> Anthonies</h2>
+        <h3 class="text-xl font-medium">+ <span id="shop-ac">5</span> AC/S</h3>
+        <h3 class="text-xl font-medium">+ <span id="shop-spc">0</span> SPC</h3>
+        <h3 class="text-2xl font-medium"><span id="shop-sold">0</span> Claimed</h3>
+        <button class="px-5 rounded-lg py-2 bg-red-500 font-medium mt-4" id="shop-buy">Buy</button>
+      </div>
+    </main>
+  </section>
+  <section id="medals" class="absolute w-full h-[0px] z-50 bottom-0 bg-zinc-900">
+    <main class="h-screen w-full relative p-5">
+      <div class="absolute top-6 right-6 flex flex-col items-center gap-0 group" onclick="menuClose('medals')">
+        <i class="fa fa-xmark text-[48px] text-neutral-500 group-hover:text-white transition-all"></i>
+        <p
+          class="text-lg leading-none font-medium text-transparent group-hover:text-white transition-all cursor-pointer">
+          Close</p>
+      </div>
+      <h1 class="text-3xl font-semibold">Achievements</h1>
+      <div class="w-full h-full flex flex-col items-center justify-center">
+        <p class="achievements text-xl font-medium">New Player</p>
+        <p class="achievements text-xl font-medium">Slavery</p>
+        <p class="achievements text-xl font-medium">Slavery: Continued</p>
+        <p class="achievements text-xl font-medium">Epic Gamer</p>
+        <p class="achievements text-xl font-medium">No Life</p>
+        <p class="achievements text-xl font-medium">Bro got hax</p>
+        <p class="achievements text-xl font-medium">Dedication</p>
+        <p class="achievements text-xl font-medium">Go touch grass</p>
+      </div>
+    </main>
+  </section>
+
+  <div class="absolute bottom-6 py-3 px-5 min-w-[20rem] h-24 bg-zinc-800 flex items-center gap-5 rounded-xl shadow"
+    style="right: -320px; z-index: 100;" onclick="menuOpen('medals')" id="a-box">
+    <i class="fa fa-trophy text-[3rem]"></i>
+    <div class="flex flex-col">
+      <h2 class="font-semibold text-xl">New achievement!</h2>
+      <p class="font-medium text-neutral-500" id="a-name">Achievement</p>
+    </div>
+  </div>
+
+  <script>
+
+    if (localStorage.getItem("Autoclicks") == null) {localStorage.setItem("Autoclicks", "0")}
+    document.querySelector('#ac').innerHTML = localStorage.getItem("Autoclicks")
+    if (localStorage.getItem("spc") == null) {localStorage.setItem("spc", "1")}
+    document.querySelector('#spc').textContent = localStorage.getItem("spc")
+
+    function makeRain(src) {
+      drop = document.createElement("img")
+      drop.src = src
+      drop.style.position = "absolute"
+      drop.style.left = Math.floor(Math.random() * (document.body.clientWidth - 95)) + "px"
+      drop.style.width = "64px"
+      drop.style.height = "64px"
+      drop.style.userSelect = "none"
+      drop.draggable = false
+      document.querySelector("#rain").appendChild(drop)
+      drop.animate([
+        {marginTop: 0, opacity: 1},
+        {marginTop: Math.floor(Math.random() * 51 + 35) + "vh", opacity: 0}
+      ], {duration: 2000, fill: "forwards"})
+      drop.addEventListener("animationend", (e) => {e.target.remove})
+    }
+
+    clicker = document.getElementById("clicker")
+    getStriker = function () {
+      localStorage.setItem("Strikers", parseInt(localStorage.getItem("Strikers")) + parseInt(localStorage.getItem("spc")))
+      document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+      newSrc = "striker.webp"
+      makeRain(newSrc)
+    }
+
+    menuOpen = function (id) {
+      shop = document.getElementById(id)
+      shop.animate([
+        {height: "0px"},
+        {height: "100vh"}
+      ], {duration: 500, easing: "ease-in", fill: "forwards"})
+    }
+    menuClose = function (id) {
+      shop = document.getElementById(id)
+      shop.animate([
+        {height: "100vh"},
+        {height: "0px"}
+      ], {duration: 500, easing: "ease-out", fill: "forwards"})
+    }
+    clicker.onclick = getStriker
+
+    var JSONfn;
+    if (!JSONfn) {
+      JSONfn = {};
+    }
+
+    (function () {
+      JSONfn.stringify = function (obj) {
+        return JSON.stringify(obj, function (key, value) {
+          return (typeof value === 'function') ? value.toString() : value;
+        });
+      }
+
+      JSONfn.parse = function (str) {
+        return JSON.parse(str, function (key, value) {
+          if (typeof value != 'string') return value;
+          return (value.substring(0, 8) == 'function') ? eval('(' + value + ')') : value;
+        });
+      }
+    }());
+    upgrades = [
+      {
+        name: "Dylan Marbles",
+        src: "/upgrades/flstudio.png",
+        cost: 100,
+        ac: 1,
+        spc: 0,
+        unlocked: true,
+        claimed: 0,
+        claim: function () {
+          u = JSONfn.parse(localStorage.getItem("upgrades"))
+          i = 0
+          if (localStorage.getItem("Strikers") >= u[i].cost) {
+            localStorage.setItem("Strikers", localStorage.getItem("Strikers") - u[i].cost)
+            document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+            u[i].claimed++
+            u[i + 1].unlocked = true
+            localStorage.setItem("Autoclicks", parseInt(localStorage.getItem("Autoclicks")) + u[i].ac)
+            localStorage.setItem("spc", parseInt(localStorage.getItem("spc")) + u[i].spc)
+            u[i].cost *= 2
+            document.getElementById("shop-sold").textContent = u[i].claimed
+            document.getElementById("shop-cost").textContent = u[i].cost
+            document.getElementById("ac").textContent = localStorage.getItem("Autoclicks")
+          } else {
+            alert("You don't have enough strikers to claim this!")
+          }
+          localStorage.setItem("upgrades", JSONfn.stringify(u))
+        }
+      },
+      {
+        name: "Aiden R",
+        src: "/upgrades/aiden.png",
+        cost: 1000,
+        ac: 2,
+        spc: 2,
+        unlocked: false,
+        claimed: 0,
+        claim: function () {
+          u = JSONfn.parse(localStorage.getItem("upgrades"))
+          i = 1
+          if (localStorage.getItem("Strikers") >= u[i].cost) {
+            localStorage.setItem("Strikers", localStorage.getItem("Strikers") - u[i].cost)
+            document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+            u[i].claimed++
+            u[i + 1].unlocked = true
+            localStorage.setItem("Autoclicks", parseInt(localStorage.getItem("Autoclicks")) + u[i].ac)
+            localStorage.setItem("spc", parseInt(localStorage.getItem("spc")) + u[i].spc)
+            u[i].cost *= 2
+            document.getElementById("shop-sold").textContent = u[i].claimed
+            document.getElementById("shop-cost").textContent = u[i].cost
+          } else {
+            alert("You don't have enough strikers to claim this!")
+          }
+          localStorage.setItem("upgrades", JSONfn.stringify(u))
+          document.getElementById("ac").textContent = localStorage.getItem("Autoclicks")
+          document.getElementById("spc").textContent = localStorage.getItem("spc")
+        }
+
+      },
+      {
+        name: "Grayson",
+        src: "/upgrades/grayson.png",
+        cost: 5000,
+        ac: 3,
+        spc: 3,
+        unlocked: false,
+        claimed: 0,
+        claim: function () {
+          u = JSONfn.parse(localStorage.getItem("upgrades"))
+          i = 3
+          if (localStorage.getItem("Strikers") >= u[i].cost) {
+            localStorage.setItem("Strikers", localStorage.getItem("Strikers") - u[i].cost)
+            document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+            u[i].claimed++
+            u[i + 1].unlocked = true
+            localStorage.setItem("Autoclicks", parseInt(localStorage.getItem("Autoclicks")) + u[i].ac)
+            localStorage.setItem("spc", parseInt(localStorage.getItem("spc")) + u[i].spc)
+            u[i].cost *= 2
+            document.getElementById("shop-sold").textContent = u[i].claimed
+            document.getElementById("shop-cost").textContent = u[i].cost
+            document.getElementById("shop-ac").textContent = u[i].ac
+          } else {
+            alert("You don't have enough strikers to claim this!")
+          }
+          localStorage.setItem("upgrades", JSONfn.stringify(u))
+        }
+      },
+      {
+        name: "Hugh Dunc",
+        src: "/upgrades/hugh.png",
+        cost: 10000,
+        ac: 3,
+        spc: 3,
+        unlocked: false,
+        claimed: 0,
+        claim: function () {
+          u = JSONfn.parse(localStorage.getItem("upgrades"))
+          i = 3
+          if (localStorage.getItem("Strikers") >= u[i].cost) {
+            localStorage.setItem("Strikers", localStorage.getItem("Strikers") - u[i].cost)
+            document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+            u[i].claimed++
+            u[i + 1].unlocked = true
+            localStorage.setItem("Autoclicks", parseInt(localStorage.getItem("Autoclicks")) + u[i].ac)
+            localStorage.setItem("spc", parseInt(localStorage.getItem("spc")) + u[i].spc)
+            u[i].cost *= 2
+            document.getElementById("shop-sold").textContent = u[i].claimed
+            document.getElementById("shop-cost").textContent = u[i].cost
+            document.getElementById("shop-ac").textContent = u[i].ac
+          } else {
+            alert("You don't have enough strikers to claim this!")
+          }
+          localStorage.setItem("upgrades", JSONfn.stringify(u))
+        }
+      },
+
+    ]
+    achivements = [
+      {
+        name: "New Player",
+        e: "s > 0",
+        unlocked: false
+      },
+      {
+        name: "Slavery",
+        e: "c > 0",
+        unlocked: false
+      },
+      {
+        name: "Slavery: Continued",
+        e: "c > 1",
+        unlocked: false
+      },
+      {
+        name: "Epic Gamer",
+        e: "s >= 1000",
+        unlocked: false
+      },
+      {
+        name: "No Life",
+        e: "s >= 5000",
+        unlocked: false
+      },
+      {
+        name: "Bro got hax",
+        e: "s >= 10000",
+        unlocked: false
+      },
+      {
+        name: "Dedication",
+        e: "s >= 50000",
+        unlocked: false
+      },
+      {
+        name: "Go touch grass",
+        e: "s >= 100000",
+        unlocked: false
+      }
+    ]
+    if (localStorage.getItem("upgrades") == null) {localStorage.setItem("upgrades", JSONfn.stringify(upgrades))}
+    else {upgrades = JSONfn.parse(localStorage.getItem("upgrades"))}
+    if (localStorage.getItem("achivements") == null) {localStorage.setItem("achivements", JSONfn.stringify(achivements))}
+    else {achivements = JSONfn.parse(localStorage.getItem("achivements"))}
+
+
+    setInterval(() => {
+      ac = parseInt(localStorage.getItem("Autoclicks"))
+      for (i = 0; i < (Math.ceil(ac / 5)); i++) {
+        makeRain("striker.webp")
+      }
+      localStorage.setItem("Strikers", parseInt(localStorage.getItem("Strikers")) + ac)
+      document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+      a = JSONfn.parse(localStorage.getItem("achivements"))
+      s = localStorage.getItem("Strikers")
+      c = 0
+      JSONfn.parse(localStorage.getItem("upgrades")).forEach((e) => {c += e.claimed})
+      a.forEach((m) => {
+        if (eval(m.e) && !m.unlocked) {
+          m.unlocked = true
+          box = document.querySelector('#a-box')
+          document.querySelector("#a-name").textContent = m.name
+          box.animate([
+            {right: (box.clientWidth) * -1 + "px"},
+            {right: "1.5rem"}
+          ], {duration: 500, easing: "ease-in-out", fill: "forwards"})
+          setTimeout(() => {
+            box.animate([
+              {right: "1.5rem"},
+              {right: (box.clientWidth) * -1 + "px"}
+            ], {duration: 500, easing: "ease-in-out", fill: "forwards"})
+          }, 3500)
+        }
+        document.querySelectorAll('.achievements').forEach((e) => {
+          if (e.textContent == m.name) {
+            if (m.unlocked) {
+              e.style.color = "white"
+            } else {
+              e.style.color = "#444"
+            }
+          }
+        })
+      })
+      localStorage.setItem("achivements", JSONfn.stringify(a))
+    }, 1000)
+
+
+    idx = -1
+    shopNext = function () {
+      if (idx < JSONfn.parse(localStorage.getItem("upgrades")).length - 1) {
+        sName = document.getElementById("shop-name")
+        sImg = document.getElementById("shop-img")
+        sCost = document.getElementById("shop-cost")
+        sAc = document.getElementById("shop-ac")
+        sSpc = document.getElementById("shop-spc")
+        sSold = document.getElementById("shop-sold")
+        sBuy = document.getElementById("shop-buy")
+
+
+        u = JSONfn.parse(localStorage.getItem("upgrades"))
+        idx += 1
+        sName.textContent = u[idx].name
+        sImg.src = u[idx].src
+        sImg.onclick = u[idx].claim
+        sCost.textContent = u[idx].cost
+        sAc.textContent = u[idx].ac
+        sSpc.textContent = u[idx].spc
+        sSold.textContent = Number(u[idx].claimed)
+        sBuy.onclick = u[idx].claim
+      }
+    }
+    shopPrev = function () {
+      if (idx > 0) {
+        sName = document.getElementById("shop-name")
+        sImg = document.getElementById("shop-img")
+        sCost = document.getElementById("shop-cost")
+        sAc = document.getElementById("shop-ac")
+        sSpc = document.getElementById("shop-spc")
+        sSold = document.getElementById("shop-sold")
+        sBuy = document.getElementById("shop-buy")
+
+        u = JSONfn.parse(localStorage.getItem("upgrades"))
+        idx -= 1
+        sName.textContent = u[idx].name
+        sImg.src = u[idx].src
+        sImg.onclick = u[idx].claim
+        sCost.textContent = u[idx].cost
+        sAc.textContent = u[idx].ac
+        sSpc.textContent = u[idx].spc
+        sSold.textContent = Number(u[idx].claimed)
+        sBuy.onclick = u[idx].claim
+      }
+    }
+    shopNext()
+    if (localStorage.getItem("Strikers") == 'NaN') {localStorage.setItem("Strikers", "0")}
+    document.querySelector('#strikers').textContent = localStorage.getItem("Strikers")
+
+  </script>
+</body>
+
+</html>
