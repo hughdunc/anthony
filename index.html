@@ -31,6 +31,7 @@
         onclick="menuOpen('shop')"><i class="fa-solid fa-bag-shopping"></i> Upgrades</button>
       <button class="w-64 py-2 bg-indigo-500 font-medium rounded-full text-2xl flex gap-3 items-center justify-center"
         onclick="menuOpen('medals')"><i class="fa-solid fa-medal"></i> Achievements</button>
+      <p class="text-sm text-white/50">if you have NaN anthonies, refresh the page</p>
     </menu>
 
   </main>
@@ -267,7 +268,6 @@
             u[i + 1].unlocked = true
             localStorage.setItem("Autoclicks", parseInt(localStorage.getItem("Autoclicks")) + u[i].ac)
             localStorage.setItem("spc", parseInt(localStorage.getItem("spc")) + u[i].spc)
-            u[i].cost *= 2
             document.getElementById("shop-sold").textContent = u[i].claimed
             document.getElementById("shop-cost").textContent = u[i].cost
             document.getElementById("shop-ac").textContent = u[i].ac
